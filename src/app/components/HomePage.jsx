@@ -2,13 +2,13 @@
 import React, { useState } from 'react';
 import '../assets/scss/home.scss'
 
-const Home = () => {
+const HomePage = () => {
 
     return (
-        <div className='body-wrapper'>
-            
+        <div className='body-wrapper' title="s">
+            Hello
         </div>
     )
 }
 
-export default Home;
+export default HomePage;
