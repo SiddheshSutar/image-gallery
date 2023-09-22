@@ -1,5 +1,7 @@
+@use '../../assets/scss/_variables.scss' as variables;
+
 .main-nav {
-    color: red;
+    color: variables.$dark-bg;
 
     .blue {
         color: blue;
