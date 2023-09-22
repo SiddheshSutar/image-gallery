@@ -2,13 +2,14 @@
 import React, { useState } from 'react';
 import '../assets/scss/home.scss'
 import Navbar from './Navbar';
+import Content from './Content';
 
 const HomePage = () => {
 
     return (
         <div className='body-wrapper'>
             <Navbar />
-            Hello
+            <Content />
         </div>
     )
 }

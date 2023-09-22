@@ -1,7 +1,11 @@
 @use '../../assets/scss/_variables.scss' as variables;
 
 .main-nav {
-    color: variables.$dark-bg;
+    background-color: variables.$dark-bg;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: variables.$outer-padding;
 
     .blue {
         color: blue;
