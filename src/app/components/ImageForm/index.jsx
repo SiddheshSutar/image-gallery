@@ -1,32 +1,44 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './index.module.scss'
 import { UploadOutlined } from '@ant-design/icons';
 import { Button, message, Modal, Upload } from 'antd';
-import { ref, uploadBytes } from 'firebase/storage';
+import { ref, uploadBytes, listAll, getDownloadURL } from 'firebase/storage';
 import { storage } from '../../../../fireStore';
 import { getBase64 } from '../../../../helpers';
 
 const ImageForm = () => {
-    
+
     // const [file, setFile] = useState(null)
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
-    
-    const uploadImage = (options) => {
-        const { onSuccess, onError, file, onProgress } = options;
-        
-        if(!file) return 
-        
-        const storageRef = ref(storage, `images/${file.name}`);
 
-        // 'file' comes from the Blob or File API
-        uploadBytes(storageRef, file).then((snapshot) => {
-            console.log('Uploaded a blob or file!');
-            file.status = 'done'
-        })
-    }
+    useEffect(() => {
+        // const listRef = ref(storage, 'images');
+        const imRef = ref(storage, 'images/polling_ER_1.5.2.PNG');
+
+        getDownloadURL(ref(storage, 'images/polling_ER_1.5.2.PNG'))
+            .then((url) => {
+
+                // This can be downloaded directly:
+                const xhr = new XMLHttpRequest();
+                xhr.responseType = 'blob';
+                xhr.onload = (event) => {
+                    const blob = xhr.response;
+                };
+                xhr.open('GET', url);
+                xhr.send();
+
+                // Or inserted into an <img> element
+                const img = document.getElementById('preview-img');
+                img.setAttribute('src', url);
+            })
+            .catch((error) => {
+                // Handle any errors
+            });
+
+    }, [])
 
     const handlePreview = async (file) => {
         console.log('hex: ', file)
@@ -54,10 +66,16 @@ const ImageForm = () => {
             if (info.file.status !== 'uploading') {
                 // console.log(info.file, info.fileList);
                 const storageRef = ref(storage, `images/${info.file.name}`);
-        
+
                 // 'file' comes from the Blob or File API
                 uploadBytes(storageRef, info.file).then((snapshot) => {
                     info.file.status = 'done'
+                    handlePreview(info.file)
+
+                    // const listRef = ref(storage, 'images');
+
+                    // listAll(listRef)
+
                 })
             }
             if (info.file.status === 'done') {
@@ -77,9 +95,9 @@ const ImageForm = () => {
                 <Upload {...props}>
                     <Button icon={<UploadOutlined />}>Click to Upload</Button>
                 </Upload>
-                <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
-                    <img alt="example" style={{ width: '100%' }} src={previewImage} />
-                </Modal>
+                {
+                    previewOpen && <img id="preview-img" alt="img" style={{ width: '100%' }} src={previewImage} />
+                }
             </div>
         </div>
     )
