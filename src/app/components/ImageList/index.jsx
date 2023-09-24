@@ -8,9 +8,11 @@ import { useEffect, useState } from 'react';
 import { collection, deleteDoc, doc, getDocs } from 'firebase/firestore';
 import { IMAGE_DB_NAME } from '../../../../constants';
 import { db } from '../../../../fireStore';
-import { CircularProgress } from '@mui/material';
+import { CircularProgress, Dialog, DialogContent } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import CloseIcon from '@mui/icons-material/Close';
+import IconButton from '@mui/material/IconButton';
 
 const ImageList = ({
     list = imagesStatic,
@@ -18,6 +20,7 @@ const ImageList = ({
 }) => {
     const [loading, setLoading] = useState(false)
     const [images, setImages] = useState([])
+    const [openImage, setOpenImage] = useState('')
     const [editObj, setEditObj] = useState(null)
     const [isCrudSuccess, setIsCrudSuccess] = useState(false)
     const [deleteSuccess, setDeleteSuccess] = useState(false)
@@ -87,6 +90,9 @@ const ImageList = ({
                                         return <div key={index} className={styles['img-card']}>
                                             <img className={styles['img']} src={imageObj.url}
                                                 alt={imageObj.url?.substring(0, 10)}
+                                                onClick={e => {
+                                                    setOpenImage(imageObj.url)
+                                                }}
                                             />
                                             <div className={styles['icons']}>
                                                 <ModeEditIcon className={styles['icon']} color="primary" fontSize='large'
@@ -101,6 +107,38 @@ const ImageList = ({
                             }
                         </div>
             }
+            <Dialog
+                // selectedValue={selectedValue}
+                maxWidth="lg"
+                open={openImage}
+                onClose={() => {
+                    setOpenImage('')
+                }}
+            >
+                <IconButton
+                    aria-label="close"
+                    onClick={() => {
+                        setOpenImage('')
+                    }}
+                    sx={{
+                        position: 'absolute',
+                        right: 8,
+                        top: 8,
+                        color: (theme) => theme.palette.grey[500],
+                    }}
+                >
+                    <CloseIcon />
+                </IconButton>
+                <DialogContent>
+                    <img className={styles['img-open']} src={openImage}
+                        alt={openImage}
+                        style={{
+                            maxHeight: '100%',
+                            aspectRatio: 'auto'
+                        }}
+                    />
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }
