@@ -1,41 +1,56 @@
 'use client'
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from './index.module.scss'
 import { UploadOutlined } from '@ant-design/icons';
 import { Button, message, Modal, Upload } from 'antd';
 import { ref, uploadBytes, listAll, getDownloadURL } from 'firebase/storage';
-import { storage } from '../../../../fireStore';
+import { db, storage } from '../../../../fireStore';
 import { getBase64 } from '../../../../helpers';
 import axios from 'axios';
+import CustomSnackbar from '../Snackbar';
+import { DEFAULT_SNACKBAR_OBJECT, IMAGE_DB_NAME } from '../../../../constants';
+import { addDoc, collection, doc, setDoc, updateDoc } from 'firebase/firestore';
 
-const ImageForm = () => {
+const ImageForm = ({
+    album,
+    editObj,
+    setEditObj,
+    setIsCrudSuccess,
+    deleteSuccess,
+    setDeleteSuccess
+}) => {
 
     // const [file, setFile] = useState(null)
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
 
+    const [imagePath, setImagePath] = useState('')
+    const [snackbarObj, setSnackbarObj] = useState(DEFAULT_SNACKBAR_OBJECT)
+
+    const inp = useRef(null)
+
     // const 
 
     const listRef = ref(storage, 'images');
-    
+
     const fetchImages = async () => {
         const resp = await listAll(listRef)
-            // .then((res) => {
-            //     res.prefixes.forEach((folderRef) => {
-            //         // All the prefixes under listRef.
-            //         // You may call listAll() recursively on them.
-            //     });
-            //     res.items.forEach((itemRef) => {
-            //         // All the items under listRef.
+        // .then((res) => {
+        //     res.prefixes.forEach((folderRef) => {
+        //         // All the prefixes under listRef.
+        //         // You may call listAll() recursively on them.
+        //     });
+        //     res.items.forEach((itemRef) => {
+        //         // All the items under listRef.
 
-            //     });
-            //     return resp
-            // }).catch((error) => {
-            //     // Uh-oh, an error occurred!
-            // });
+        //     });
+        //     return resp
+        // }).catch((error) => {
+        //     // Uh-oh, an error occurred!
+        // });
 
-            // return resp
+        // return resp
 
         // let result = await storageRef.child('images').listAll();
         // let result = await ref(storage, 'images').listAll();
@@ -44,13 +59,29 @@ const ImageForm = () => {
         // return Promise.all(urlPromises);
 
         const storageRef = ref(storage, 'images');
-    const result = await listAll(storageRef);
-  
-    const urlPromises = result.items.map((imageRef) => getDownloadURL(imageRef));
-  
-    return Promise.all(urlPromises);
+        const result = await listAll(storageRef);
+
+        const urlPromises = result.items.map((imageRef) => getDownloadURL(imageRef));
+
+        return Promise.all(urlPromises);
 
     }
+
+    useEffect(() => {
+        editObj && setImagePath(editObj.url)
+    }, [editObj])
+
+    useEffect(() => {
+        if (deleteSuccess) {
+            setSnackbarObj({
+                open: true,
+                severity: 'success',
+                message: 'Image deleted successfully'
+            })
+            setIsCrudSuccess(true)
+            setDeleteSuccess(false)
+        } 
+    }, [deleteSuccess])
 
     useEffect(() => {
         // const listRef = ref(storage, 'images');
@@ -58,7 +89,6 @@ const ImageForm = () => {
 
         // const loadImages = async () => {
         //     const urls = await fetchImages();
-        //     console.log('hex: ', urls)
         //     const img = document.getElementById('preview-img');
         //     img.setAttribute('src', urls[0]);
         //     // setFiles(urls);
@@ -66,7 +96,7 @@ const ImageForm = () => {
 
         // }
         // loadImages();
-        
+
 
         // getDownloadURL(ref(storage, 'images/polling_ER_1.5.2.PNG'))
         //     .then((url) => {
@@ -110,10 +140,10 @@ const ImageForm = () => {
         //         }
         //     });
 
-        
+
         // axios
         // .get('https://firebasestorage.googleapis.com/v0/b/cndemo-164b6.appspot.com/o/images%2Fpolling_ER_1.5.2.PNG?token=bcfa4ace-193e-4e6e-a616-32d6b21e372f')
-        
+
         // .then(res => {
         //     console.log('hexs: ', res)
         // })
@@ -121,7 +151,6 @@ const ImageForm = () => {
     }, [])
 
     const handlePreview = async (file) => {
-        console.log('hex: ', file)
         if (!file.url && !file.preview) {
             file.preview = await getBase64(file.originFileObj);
         }
@@ -169,16 +198,96 @@ const ImageForm = () => {
 
     const handleCancel = () => setPreviewOpen(false);
 
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+
+        if (!imagePath) {
+            setSnackbarObj({
+                open: true,
+                severity: 'error',
+                message: 'Please enter image path'
+            })
+            inp.current.focus()
+            return
+        }
+
+        if(editObj) {
+            if(!editObj.id) {
+                setSnackbarObj({
+                    open: true,
+                    severity: 'success',
+                    message: 'Some error occured while editing'
+                })
+                return
+            }
+            //edit flow
+            const imageEditref = doc(db, IMAGE_DB_NAME, editObj.id);
+
+            const newObj = {
+                ...editObj,
+                url: imagePath
+            }
+            const editres = await updateDoc(imageEditref, newObj);
+
+            setIsCrudSuccess(true)
+            setImagePath('')
+            setSnackbarObj({
+                open: true,
+                severity: 'success',
+                message: 'Image edited successfully'
+            })
+        } else {
+            // create flow
+            const imageref = collection(db, IMAGE_DB_NAME);
+            const docRef = await addDoc(imageref, {
+                url: imagePath,
+                album
+            });
+            setIsCrudSuccess(true)
+
+            setSnackbarObj({
+                open: true,
+                severity: 'success',
+                message: 'Image added successfully'
+            })
+        }
+
+        inp.current.focus()
+    }
+
+
     return (
         <div className={`container ${styles.temp}`}>
             <div className={styles.form}>
-                <Upload {...props}>
-                    <Button icon={<UploadOutlined />}>Click to Upload</Button>
-                </Upload>
-                {
-                    // previewOpen && <img id="preview-img" alt="img" style={{ width: '100%' }} src={previewImage} />
-                    true && <img id="preview-img" alt="img" width={100} height={100} src={previewImage} />
-                }
+                <form onSubmit={handleSubmit}>
+                    {/* <Upload {...props}>
+                        <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                    </Upload>
+                    {
+                        // previewOpen && <img id="preview-img" alt="img" style={{ width: '100%' }} src={previewImage} />
+                        true && <img id="preview-img" alt="img" width={100} height={100} src={previewImage} />
+                    } */}
+                    <input ref={inp} type='text' name="imagePath" value={imagePath}
+                        onChange={e => {
+                            setImagePath(e.target.value)
+                        }}
+                    />
+                    <button type='button' 
+                        onClick={e => {
+                            setImagePath('')
+                            setEditObj && setEditObj(null)
+                            inp.current.focus()
+                        }}
+                    >Clear</button>
+                    <button type='submit'>Create</button>
+
+                </form>
+                <CustomSnackbar
+                    open={snackbarObj.open}
+                    onClose={() => setSnackbarObj(DEFAULT_SNACKBAR_OBJECT)}
+                    message={snackbarObj.message}
+                    severity={snackbarObj.severity}
+                />
             </div>
         </div>
     )

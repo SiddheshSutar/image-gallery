@@ -1,6 +1,7 @@
 import Script from 'next/script'
 import Navbar from './components/Navbar'
 import Content from './components/Content'
+import './assets/scss/home.scss'
 
 export const metadata = {
   title: 'Next.js',

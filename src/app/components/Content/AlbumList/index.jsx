@@ -25,7 +25,6 @@ const AlbumList = ({
                 id: doc.id,
                 ...doc.data()
             }));
-            console.log('hex: ', albums)
             setAlbums(albums)
         })()
     }, [])

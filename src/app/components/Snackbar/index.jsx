@@ -13,7 +13,7 @@ const CustomSnackbar = ({
                 anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
                 onClose={onClose}
             >
-                <Alert onClose={onClose} severity="error" sx={{ width: '100%' }}>
+                <Alert onClose={onClose} severity={severity} sx={{ width: '100%' }}>
                     {message}
                 </Alert>
             </Snackbar>

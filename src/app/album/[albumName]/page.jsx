@@ -14,7 +14,6 @@ import ImageList from "../../components/ImageList";
 //         id: doc.id,
 //         ...doc.data()
 //     }));
-//     console.log('hex: ', albums)
 
 //     return albums.map((album) => ({
 //         name: album.name,
@@ -24,6 +23,6 @@ import ImageList from "../../components/ImageList";
 export default function Page({ params }) {
     return <>
         {/* <div>My Album: {params.albumName}</div> */}
-        <ImageList />
+        <ImageList album={params.albumName}/>
     </>
 }
