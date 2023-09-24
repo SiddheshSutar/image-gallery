@@ -6,12 +6,14 @@ import AlbumForm from './AlbumForm';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../../../../fireStore';
 import { ALBUM_DB_NAME } from '../../../../../constants';
+import { CircularProgress } from '@mui/material';
 
 const AlbumList = ({
     list = albumsStatic
 }) => {
     const router = useRouter()
 
+    const [loading, setLoading] = useState(false)
     const [albums, setAlbums] = useState([])
 
     const handleAlbumClick = (e, albumObj) => {
@@ -20,11 +22,13 @@ const AlbumList = ({
 
     useEffect(() => {
         (async () => {
+            setLoading(true)
             const snapshot = await getDocs(collection(db, ALBUM_DB_NAME));
             const albums = snapshot.docs.map((doc) => ({
                 id: doc.id,
                 ...doc.data()
             }));
+            setLoading(false)
             setAlbums(albums)
         })()
     }, [])
@@ -33,24 +37,24 @@ const AlbumList = ({
         <div className={styles['album-container']}>
             <AlbumForm />
             {
-                !albums || albums.length === 0 ?
-                    <h1>
-                        No albums found
-                    </h1> :
-                    <div className={styles['album-list-container']}>
-                        {
+                loading ?
+                    <CircularProgress color="secondary" /> :
+                    !albums || albums.length === 0 ?
+                        <h1>No albums found</h1> :
+                        <div className={styles['album-list-container']}>
+                            {
 
-                            albums.map((albumObj, index) => {
-                                return <div key={index} className={styles['album-card']}
-                                    onClick={e => handleAlbumClick(e, albumObj)}
-                                >
-                                    <div className={styles['name']}>
-                                        {albumObj.name}
+                                albums.map((albumObj, index) => {
+                                    return <div key={index} className={styles['album-card']}
+                                        onClick={e => handleAlbumClick(e, albumObj)}
+                                    >
+                                        <div className={styles['name']}>
+                                            {albumObj.name}
+                                        </div>
                                     </div>
-                                </div>
-                            })
-                        }
-                    </div>
+                                })
+                            }
+                        </div>
             }
 
         </div>

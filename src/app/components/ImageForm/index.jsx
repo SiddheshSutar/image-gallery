@@ -230,7 +230,7 @@ const ImageForm = ({
             const editres = await updateDoc(imageEditref, newObj);
 
             setIsCrudSuccess(true)
-            setImagePath('')
+            setEditObj(null)
             setSnackbarObj({
                 open: true,
                 severity: 'success',
@@ -251,7 +251,7 @@ const ImageForm = ({
                 message: 'Image added successfully'
             })
         }
-
+        setImagePath('')
         inp.current.focus()
     }
 
@@ -279,7 +279,9 @@ const ImageForm = ({
                             inp.current.focus()
                         }}
                     >Clear</button>
-                    <button type='submit'>Create</button>
+                    <button type='submit'>
+                        {editObj ? 'Update' : 'Create'}
+                    </button>
 
                 </form>
                 <CustomSnackbar
