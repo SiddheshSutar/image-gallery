@@ -17,7 +17,7 @@ const AlbumList = ({
     const [albums, setAlbums] = useState([])
 
     const handleAlbumClick = (e, albumObj) => {
-        router.push(`album/${albumObj.name}`)
+        albumObj.name && router.push(`album/${albumObj.name}`)
     }
 
     useEffect(() => {
