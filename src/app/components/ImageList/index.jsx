@@ -9,6 +9,8 @@ import { collection, deleteDoc, doc, getDocs } from 'firebase/firestore';
 import { IMAGE_DB_NAME } from '../../../../constants';
 import { db } from '../../../../fireStore';
 import { CircularProgress } from '@mui/material';
+import { useRouter } from 'next/navigation';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 
 const ImageList = ({
     list = imagesStatic,
@@ -19,6 +21,7 @@ const ImageList = ({
     const [editObj, setEditObj] = useState(null)
     const [isCrudSuccess, setIsCrudSuccess] = useState(false)
     const [deleteSuccess, setDeleteSuccess] = useState(false)
+    const router = useRouter()
 
     const fetchImages = async () => {
         setLoading(true)
@@ -53,6 +56,17 @@ const ImageList = ({
 
     return (
         <div className={styles['img-container']}>
+            <ArrowBackIosNewIcon
+                sx={{
+                    color: '#d153fb',
+                    cursor: 'pointer'
+                }}
+                titleAccess='Back'
+                fontSize='large'
+                onClick={e => {
+                    router.back()
+                }}
+            />
             <ImageForm album={album}
                 editObj={editObj} setEditObj={setEditObj}
                 setIsCrudSuccess={setIsCrudSuccess}
