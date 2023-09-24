@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import styles from './index.module.scss'
 import { useRouter } from 'next/navigation'
-import { albumsStatic } from '../../../../../helpers';
-import AlbumForm from './AlbumForm';
+import { albumsStatic } from '../../../../helpers';
+import AlbumForm from '../AlbumForm';
 import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../../../../../fireStore';
-import { ALBUM_DB_NAME } from '../../../../../constants';
+import { db } from '../../../../fireStore';
+import { ALBUM_DB_NAME } from '../../../../constants';
 import { CircularProgress } from '@mui/material';
 
 const AlbumList = ({

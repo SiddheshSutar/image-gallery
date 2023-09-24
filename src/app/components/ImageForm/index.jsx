@@ -1,6 +1,6 @@
 'use client'
 import React, { useEffect, useRef, useState } from 'react';
-import styles from './index.module.scss'
+import formStyles from '../../assets/scss/form.module.scss'
 import { UploadOutlined } from '@ant-design/icons';
 import { Button, message, Modal, Upload } from 'antd';
 import { ref, uploadBytes, listAll, getDownloadURL } from 'firebase/storage';
@@ -257,8 +257,8 @@ const ImageForm = ({
 
 
     return (
-        <div className={`container ${styles.temp}`}>
-            <div className={styles.form}>
+        <div className={`container ${formStyles['container']}`}>
+            <div className={'styles.form'}>
                 <form onSubmit={handleSubmit}>
                     {/* <Upload {...props}>
                         <Button icon={<UploadOutlined />}>Click to Upload</Button>
@@ -272,16 +272,19 @@ const ImageForm = ({
                             setImagePath(e.target.value)
                         }}
                     />
-                    <button type='button' 
-                        onClick={e => {
-                            setImagePath('')
-                            setEditObj && setEditObj(null)
-                            inp.current.focus()
-                        }}
-                    >Clear</button>
-                    <button type='submit'>
+                    <button type='submit' className={formStyles['btn-submit']}>
                         {editObj ? 'Update' : 'Create'}
                     </button>
+                    {
+                        imagePath && <button type='button'
+                            className={formStyles['btn-clear']}
+                            onClick={e => {
+                                setImagePath('')
+                                setEditObj && setEditObj(null)
+                                inp.current.focus()
+                            }}
+                        >Clear</button>
+                    }
 
                 </form>
                 <CustomSnackbar

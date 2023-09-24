@@ -1,6 +1,6 @@
 'use client'
 import React, { useState } from 'react';
-import AlbumList from './Content/AlbumList';
+import AlbumList from './AlbumList';
 
 const HomePage = () => {
 

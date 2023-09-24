@@ -1,8 +1,8 @@
 import { useRef, useState } from 'react'
-import styles from './index.module.scss'
+import formStyles from '../../assets/scss/form.module.scss'
 import { addDoc, collection } from 'firebase/firestore'
-import { db } from '../../../../../../fireStore'
-import { ALBUM_DB_NAME } from '../../../../../../constants'
+import { db } from '../../../../fireStore'
+import { ALBUM_DB_NAME } from '../../../../constants'
 import CustomSnackbar from '@/app/components/Snackbar'
 
 const AlbumForm = () => {
@@ -28,20 +28,23 @@ const AlbumForm = () => {
         inp.current.focus()
     }
     return (
-        <div className={styles['container']}>
+        <div className={formStyles['container']}>
             <form onSubmit={handleSubmit}>
                 <input ref={inp} type='text' name="albumname" value={albumName}
                     onChange={e => {
                         setAlbumName(e.target.value)
                     }}
                 />
-                <button type='clear'
-                    onClick={e => {
-                        setAlbumName('')
-                        inp.current.focus()
-                    }}
-                >Clear</button>
-                <button type='submit'>Create</button>
+                <button type='submit' className={formStyles['btn-submit']}>Create</button>
+                {
+                    albumName &&
+                    <button type='button' className={formStyles['btn-clear']}
+                        onClick={e => {
+                            setAlbumName('')
+                            inp.current.focus()
+                        }}
+                    >Clear</button>
+                }
             </form>
             <CustomSnackbar
                 open={open}
