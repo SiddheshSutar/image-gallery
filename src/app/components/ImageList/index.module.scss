@@ -3,14 +3,14 @@ img.img {
     height: 300px;
 }
 
-.img-container {
+.img-list-container {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
     gap: 10px;
 }
 
-.img-container > * {
+.img-list-container > * {
     height: fit-content;
 }
 

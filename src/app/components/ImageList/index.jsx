@@ -1,6 +1,8 @@
+"use client";
 import styles from './index.module.scss'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import ImageForm from '../ImageForm';
 
 const images = [
     {
@@ -26,18 +28,21 @@ const ImageList = ({
 }) => {
     return (
         <div className={styles['img-container']}>
-            {
-                list.map(imageObj => {
+            <ImageForm />
+            <div className={styles['img-list-container']}>
+                {
+                    list.map(imageObj => {
 
-                    return <div className={styles['img-card']}>
-                        <img className={styles['img']} src={imageObj.url} alt={imageObj.name} />
-                        <div className={styles['icons']}>
-                            <DeleteForeverIcon className={styles['icon']} color="error" fontSize='large' />
-                            <ModeEditIcon className={styles['icon']} color="primary" fontSize='large' />
+                        return <div className={styles['img-card']}>
+                            <img className={styles['img']} src={imageObj.url} alt={imageObj.name} />
+                            <div className={styles['icons']}>
+                                <DeleteForeverIcon className={styles['icon']} color="error" fontSize='large' />
+                                <ModeEditIcon className={styles['icon']} color="primary" fontSize='large' />
+                            </div>
                         </div>
-                    </div>
-                })
-            }
+                    })
+                }
+            </div>
         </div>
     );
 }

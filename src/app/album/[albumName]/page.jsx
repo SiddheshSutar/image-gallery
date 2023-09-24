@@ -1,25 +1,29 @@
+'use client'
+
 import { collection, getDocs } from "firebase/firestore";
 import { ALBUM_DB_NAME } from "../../../../constants";
 import { db } from "../../../../fireStore";
 import RootLayout from "@/app/layout";
+import ImageList from "../../components/ImageList";
 
-export async function generateStaticParams() {
-    // const posts = await fetch('https://.../posts').then((res) => res.json())
+// export async function generateStaticParams() {
+//     // const posts = await fetch('https://.../posts').then((res) => res.json())
 
-    const snapshot = await getDocs(collection(db, ALBUM_DB_NAME));
-    const albums = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data()
-    }));
-    console.log('hex: ', albums)
+//     const snapshot = await getDocs(collection(db, ALBUM_DB_NAME));
+//     const albums = snapshot.docs.map((doc) => ({
+//         id: doc.id,
+//         ...doc.data()
+//     }));
+//     console.log('hex: ', albums)
 
-    return albums.map((album) => ({
-        name: album.name,
-    }))
-}
+//     return albums.map((album) => ({
+//         name: album.name,
+//     }))
+// }
 
 export default function Page({ params }) {
-    return <RootLayout>
-        <div>My Album: {params.albumName}</div>
-    </RootLayout>
+    return <>
+        {/* <div>My Album: {params.albumName}</div> */}
+        <ImageList />
+    </>
 }
