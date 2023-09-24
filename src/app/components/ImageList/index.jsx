@@ -1,4 +1,6 @@
 import styles from './index.module.scss'
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
 
 const images = [
     {
@@ -26,14 +28,18 @@ const ImageList = ({
         <div className={styles['img-container']}>
             {
                 list.map(imageObj => {
-                    
-                    return <>
+
+                    return <div className={styles['img-card']}>
                         <img className={styles['img']} src={imageObj.url} alt={imageObj.name} />
-                    </>
+                        <div className={styles['icons']}>
+                            <DeleteForeverIcon className={styles['icon']} color="error" fontSize='large' />
+                            <ModeEditIcon className={styles['icon']} color="primary" fontSize='large' />
+                        </div>
+                    </div>
                 })
             }
         </div>
     );
 }
- 
+
 export default ImageList;
