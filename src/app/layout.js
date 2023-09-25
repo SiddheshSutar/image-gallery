@@ -2,6 +2,9 @@ import Script from 'next/script'
 import Navbar from './components/Navbar'
 import Content from './components/Content'
 import './assets/scss/home.scss'
+import "@fortawesome/fontawesome-svg-core/styles.css";
+import { config } from "@fortawesome/fontawesome-svg-core";
+config.autoAddCss = false;
 
 export const metadata = {
   title: 'Next.js',
@@ -9,17 +12,17 @@ export const metadata = {
 }
 
 export default function RootLayout({ children }) {
- return (
+  return (
     <html lang="en">
       <head>
-       <script async src="https://kit.fontawesome.com/2d9b67a497.js" crossOrigin="anonymous"></script>
-       <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+        <script async src="https://kit.fontawesome.com/2d9b67a497.js" crossOrigin="anonymous"></script>
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
       </head>
       <body>
-       <div className='body-wrapper'>
-         <Navbar />
-         <Content children={children} />
-       </div>
+        <div className='body-wrapper'>
+          <Navbar />
+          <Content children={children} />
+        </div>
       </body>
     </html>
   )

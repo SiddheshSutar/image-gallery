@@ -2,20 +2,27 @@ import { useRef, useState } from 'react'
 import formStyles from '../../assets/scss/form.module.scss'
 import { addDoc, collection } from 'firebase/firestore'
 import { db } from '../../../../fireStore'
-import { ALBUM_DB_NAME } from '../../../../constants'
+import { ALBUM_DB_NAME, DEFAULT_SNACKBAR_OBJECT } from '../../../../constants'
 import CustomSnackbar from '@/app/components/Snackbar'
 
-const AlbumForm = () => {
+const AlbumForm = ({
+    setIsCrudSuccess
+}) => {
 
     const [albumName, setAlbumName] = useState('')
-    const [open, setopen] = useState(false)
+    const [snackbarObj, setSnackbarObj] = useState(DEFAULT_SNACKBAR_OBJECT)
+
     const inp = useRef(null)
 
     const handleSubmit = async (e) => {
         e.preventDefault()
 
         if (!albumName) {
-            setopen(true)
+            setSnackbarObj({
+                open: true,
+                severity: 'error',
+                message: 'Please enter album name'
+            })
             inp.current.focus()
             return
         }
@@ -24,6 +31,12 @@ const AlbumForm = () => {
         const docRef = await addDoc(albumRef, {
             name: albumName
         });
+        setSnackbarObj({
+            open: true,
+            severity: 'success',
+            message: 'Album added successfully'
+        })
+        setIsCrudSuccess(true)
 
         inp.current.focus()
     }
@@ -47,10 +60,10 @@ const AlbumForm = () => {
                 }
             </form>
             <CustomSnackbar
-                open={open}
-                onClose={() => setopen(false)}
-                message="Please enter album name"
-                severity={"error"}
+                open={snackbarObj.open}
+                onClose={() => setSnackbarObj(DEFAULT_SNACKBAR_OBJECT)}
+                message={snackbarObj.message}
+                severity={snackbarObj.severity}
             />
         </div>
     );
