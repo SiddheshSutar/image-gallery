@@ -57,6 +57,13 @@ const ImageList = ({
         setDeleteSuccess(true)
     }
 
+    const handleImageLoad = (e, imageSrc) => {
+        console.log('hex; ', Object.keys(e.target))
+        fetch(imageSrc)
+            .then(res => res.blob())
+            .then(res => console.log('hex; ', res))
+    }
+
     return (
         <div className={styles['img-container']}>
             <ArrowBackIosNewIcon
@@ -129,13 +136,10 @@ const ImageList = ({
                 >
                     <CloseIcon />
                 </IconButton>
-                <DialogContent>
+                <DialogContent className={styles['dialog']}>
                     <img className={styles['img-open']} src={openImage}
+                    // onLoad={(e) => handleImageLoad(e, openImage)}
                         alt={openImage}
-                        style={{
-                            maxHeight: '100%',
-                            aspectRatio: 'auto'
-                        }}
                     />
                 </DialogContent>
             </Dialog>

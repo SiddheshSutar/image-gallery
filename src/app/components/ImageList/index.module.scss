@@ -50,4 +50,17 @@ img.img {
     }
 }
 
+.dialog {
+    max-height: 83vh;
+    max-width: 83vw;
+    aspect-ratio: 1/1;
+    display: grid;
+    place-items: center;
 
+    img {
+        object-fit: contain;
+        max-height: 100%;
+        max-width: 100%;
+        aspect-ratio: auto;
+    }
+}
